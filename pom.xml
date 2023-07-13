@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.camunda.consulting</groupId>
+  <artifactId>zeebe-workaround-operation-batch</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Zeebe Workaround Operation Batch</name>
+  <description>Apply Process Instance Modification and Message Correlation to several process instances</description>
+  
+  <properties>
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <spotless.version>2.37.0</spotless.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.camunda.spring</groupId>
+      <artifactId>spring-boot-starter-camunda</artifactId>
+      <version>8.2.3</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.33</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>io.camunda</groupId>
+      <artifactId>zeebe-process-test-extension</artifactId>
+      <version>8.2.8</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.8</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+</project>

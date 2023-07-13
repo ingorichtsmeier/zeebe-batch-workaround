@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0kz2nyg" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.13.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <bpmn:process id="ProcessInstanceModificationProcess" name="Process Instance Modification Process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Process Instance Modifications requested">
+      <bpmn:outgoing>Flow_1wkubs0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1wkubs0" sourceRef="StartEvent_1" targetRef="Activity_1exp2a5" />
+    <bpmn:subProcess id="Activity_1exp2a5" name="Process Instance Modification">
+      <bpmn:incoming>Flow_1wkubs0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0767o8o</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics isSequential="true">
+        <bpmn:extensionElements>
+          <zeebe:loopCharacteristics inputCollection="=modifications" inputElement="processInstanceToModify" outputCollection="results" outputElement="=modificationResult" />
+        </bpmn:extensionElements>
+      </bpmn:multiInstanceLoopCharacteristics>
+      <bpmn:startEvent id="Event_0p10asb">
+        <bpmn:outgoing>Flow_183fnp9</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_183fnp9" sourceRef="Event_0p10asb" targetRef="ApplyModificationTask" />
+      <bpmn:endEvent id="Event_1s9h1gf" name="Single modification successful">
+        <bpmn:incoming>Flow_1lxwyc3</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_1lxwyc3" sourceRef="ApplyModificationTask" targetRef="Event_1s9h1gf" />
+      <bpmn:serviceTask id="ApplyModificationTask" name="Apply modification">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="processInstanceModification" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_183fnp9</bpmn:incoming>
+        <bpmn:outgoing>Flow_1lxwyc3</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:boundaryEvent id="Event_0o4lv7y" name="Modification failed" attachedToRef="ApplyModificationTask">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="=modificationResult" target="modificationResult" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:outgoing>Flow_140grsb</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1qiqyxx" errorRef="Error_1cvoc5y" />
+      </bpmn:boundaryEvent>
+      <bpmn:endEvent id="Event_10uc1zm" name="Single modification failed">
+        <bpmn:incoming>Flow_140grsb</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_140grsb" sourceRef="Event_0o4lv7y" targetRef="Event_10uc1zm" />
+    </bpmn:subProcess>
+    <bpmn:endEvent id="Event_0qhfzou" name="Process Instances modified">
+      <bpmn:incoming>Flow_0767o8o</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0767o8o" sourceRef="Activity_1exp2a5" targetRef="Event_0qhfzou" />
+  </bpmn:process>
+  <bpmn:error id="Error_1cvoc5y" name="modification failed error" errorCode="modificationFailedError" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ProcessInstanceModificationProcess">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="202" width="85" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0qhfzou_di" bpmnElement="Event_0qhfzou">
+        <dc:Bounds x="762" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="756" y="202" width="48" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10q34j6_di" bpmnElement="Activity_1exp2a5" isExpanded="true">
+        <dc:Bounds x="310" y="77" width="350" height="310" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0p10asb_di" bpmnElement="Event_0p10asb">
+        <dc:Bounds x="350.33333333333337" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1s9h1gf_di" bpmnElement="Event_1s9h1gf">
+        <dc:Bounds x="602" y="159" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="591" y="202" width="59" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_080s7eu_di" bpmnElement="ApplyModificationTask">
+        <dc:Bounds x="440" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10uc1zm_di" bpmnElement="Event_10uc1zm">
+        <dc:Bounds x="562" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="536" y="325" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14n9kbz_di" bpmnElement="Event_0o4lv7y">
+        <dc:Bounds x="472" y="199" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="446" y="242" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_183fnp9_di" bpmnElement="Flow_183fnp9">
+        <di:waypoint x="386" y="177" />
+        <di:waypoint x="440" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lxwyc3_di" bpmnElement="Flow_1lxwyc3">
+        <di:waypoint x="540" y="177" />
+        <di:waypoint x="602" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_140grsb_di" bpmnElement="Flow_140grsb">
+        <di:waypoint x="490" y="235" />
+        <di:waypoint x="490" y="300" />
+        <di:waypoint x="562" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wkubs0_di" bpmnElement="Flow_1wkubs0">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="310" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0767o8o_di" bpmnElement="Flow_0767o8o">
+        <di:waypoint x="660" y="177" />
+        <di:waypoint x="762" y="177" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
