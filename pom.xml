@@ -26,18 +26,12 @@
       <version>1.33</version>
     </dependency>
     
-<!--    <dependency>-->
-<!--      <groupId>io.camunda</groupId>-->
-<!--      <artifactId>zeebe-process-test-extension</artifactId>-->
-<!--      <version>8.2.8</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
-<!--    <dependency>-->
-<!--      <groupId>ch.qos.logback</groupId>-->
-<!--      <artifactId>logback-classic</artifactId>-->
-<!--      <version>1.4.8</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+    <dependency>
+      <groupId>io.camunda.spring</groupId>
+      <artifactId>spring-boot-starter-camunda-test</artifactId>
+      <version>8.2.3</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   
 </project>
