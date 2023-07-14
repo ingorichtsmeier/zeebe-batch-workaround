@@ -122,3 +122,24 @@ Result variable of a process instance:
 ```
 ["completed: 2251799833556731","completed: 2251799833558304"]
 ```
+
+# Low Level Kibana Instructions
+
+Kibana is not able to share the Discovery queries as a single entity. Here is
+the process to create them.
+
+1. Create Index-Patterns and the base for the searches. Index Patterns are
+   created on Stack Management -> Index Patterns. The required Index patterns
+   are:
+   - operate-incident\*
+   - operate-event\*
+   - zeebe-record-job\*
+   - operate-variable\*
+2. Create the queries in Discover. Select an index pattern and add the search
+   parameters in the Search field. Autocompletion gives valid proposals. Select
+   relevant fields as column for the output with the plus-sign next to the field
+   name.
+3. Save the query with Save from the toolbar.
+4. Open saved queries from the toolbar when required.
+5. Share the results as CSV files. They contain only the selected output
+   columns.
