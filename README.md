@@ -24,6 +24,9 @@ Result: `processInstanceKey`
 
 Benefit: Records will be updated in `state` when the issue is resolved.
 
+See:
+[error-message-search-curl.txt](elastic-queries/error-message-search-curl.txt)
+
 ### Index: `operate-event`
 
 Contains: All Zeebe-events imported by Operate. eventTypes on BPMN elements and
@@ -37,6 +40,9 @@ Benefit: Records will be updated when issue is resolved
 
 Downside: No field with error message available
 
+See:
+[failed-jobs-with-retries-curl.txt](elastic-queries/failed-jobs-with-retries-curl.txt)
+
 ### Index: `zeebe-record-job`
 
 Contains: All exported Zeebe-events for all jobs.
@@ -48,6 +54,9 @@ Result: `value.processInstanceKey`, `value.elementInstanceKey`
 
 Downside: Records won't be deleted here if issue is resolved. Another record
 with `intend: "CANCELED"` is inserted for the same job.
+
+See:
+[failed-jobs-with-retries-left-curl.txt](/elastic-queries/failed-jobs-with-retries-left-curl.txt)
 
 ## Correlate Messages to multiple Process Instances
 
@@ -64,6 +73,9 @@ KQL-Parameters:
 
 Result: `value`
 
+See:
+[variables-for-correlation-curl.txt](elastic-queries/variables-for-correlation-curl.txt)
+
 ### Execute the command for correlation key for all process instances
 
 Use the values from the last search for the `zbctl` command:
@@ -75,7 +87,7 @@ zbctl publish message repairMessage1 --correlationKey 7 --variables "{\"issue1Me
 In this example, `7` is the value for the `businessKey`, which is the variable
 for the message correlation.
 
-# Apply Multiple Process Instance Modifications in Batch
+## Apply Multiple Process Instance Modifications in Batch
 
 Search for all process instances that have to be modified with one or more of
 the queries mentioned above.
@@ -83,6 +95,8 @@ the queries mentioned above.
 Start a process instance of `ProcessInstanceModificationProcess`. It applies the
 process instance modifications in a multi instance subprocess and catches errors
 if the modification command throws an exception for a single modification.
+
+<img src="doc/process-instance-modification-process.png" alt="ProcessInstanceModificationProcess" width="75%" />
 
 Example payload for the process start:
 
