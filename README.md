@@ -24,10 +24,11 @@ another. They have to be created in the frontend.
    - operate-event\*
    - zeebe-record-job\*
    - operate-variable\*
-2. Create the queries in Analytics -> Discover. Select an index pattern and add
+2. Create the searches in Analytics -> Discover. Select an index pattern and add
    the search parameters in the Search field. Autocompletion gives valid
    proposals. Select relevant fields as column for the output with the plus-sign
-   next to the field name. Details about the required queries will follow below.
+   next to the field name. Details about the required searches will follow
+   below.
 3. Save the search with Save from the toolbar.<br>
    <img src="doc/save-search-button.png" alt="Save search button in Kibana" width="30%" /><br>
    <img src="doc/save-search.png" alt="Save search dialogue in Kibana" width="30%">
