@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1jh6yt4" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.13.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <bpmn:process id="MultipleFailureProcess" name="Multiple Failure Process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Multiple failures can happen">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#34;businessKey&#34;: 1}" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_02kkn77</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_02kkn77" sourceRef="StartEvent_1" targetRef="Activity_Task_1" />
+    <bpmn:sequenceFlow id="Flow_1h27wym" sourceRef="Activity_Task_1" targetRef="Gateway_1cfszgi" />
+    <bpmn:sequenceFlow id="Flow_15nnljt" sourceRef="Activity_Task_2" targetRef="Activity_Task_3" />
+    <bpmn:endEvent id="Event_0kgni9u" name="Enough failures happend">
+      <bpmn:incoming>Flow_162bfub</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0z7b40w" sourceRef="Activity_Task_3" targetRef="Gateway_0ujtrcd" />
+    <bpmn:serviceTask id="Activity_Task_1" name="Do task 1">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="failingExample1" />
+        <zeebe:properties>
+          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#34;fehlermeldung&#34;:2}" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02kkn77</bpmn:incoming>
+      <bpmn:outgoing>Flow_1h27wym</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_Task_2" name="Do task 2">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="failingExample2" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1o9ak3z</bpmn:incoming>
+      <bpmn:outgoing>Flow_15nnljt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_Task_3" name="Do task 3">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="failingExample3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_15nnljt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0z7b40w</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_11dzvpf" name="Error repaired" attachedToRef="Activity_Task_1">
+      <bpmn:outgoing>Flow_18bnztr</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1896geo" messageRef="Message_1e1m39j" />
+    </bpmn:boundaryEvent>
+    <bpmn:exclusiveGateway id="Gateway_1cfszgi">
+      <bpmn:incoming>Flow_1h27wym</bpmn:incoming>
+      <bpmn:incoming>Flow_18bnztr</bpmn:incoming>
+      <bpmn:outgoing>Flow_1o9ak3z</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1o9ak3z" sourceRef="Gateway_1cfszgi" targetRef="Activity_Task_2" />
+    <bpmn:sequenceFlow id="Flow_18bnztr" sourceRef="Event_11dzvpf" targetRef="Gateway_1cfszgi" />
+    <bpmn:boundaryEvent id="Event_1jiuypc" name="Error repaired" attachedToRef="Activity_Task_3">
+      <bpmn:extensionElements />
+      <bpmn:outgoing>Flow_0ev99y2</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0cqq6pg" messageRef="Message_23b65k9" />
+    </bpmn:boundaryEvent>
+    <bpmn:exclusiveGateway id="Gateway_0ujtrcd">
+      <bpmn:incoming>Flow_0z7b40w</bpmn:incoming>
+      <bpmn:incoming>Flow_0ev99y2</bpmn:incoming>
+      <bpmn:outgoing>Flow_162bfub</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_162bfub" sourceRef="Gateway_0ujtrcd" targetRef="Event_0kgni9u" />
+    <bpmn:sequenceFlow id="Flow_0ev99y2" sourceRef="Event_1jiuypc" targetRef="Gateway_0ujtrcd" />
+  </bpmn:process>
+  <bpmn:message id="Message_1e1m39j" name="repairMessage1">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=businessKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_23b65k9" name="repairMessage3">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=businessKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="MultipleFailureProcess">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="159" y="142" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kgni9u_di" bpmnElement="Event_0kgni9u">
+        <dc:Bounds x="992" y="99" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="972" y="142" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_048fw89_di" bpmnElement="Activity_Task_1">
+        <dc:Bounds x="275" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1cfszgi_di" bpmnElement="Gateway_1cfszgi" isMarkerVisible="true">
+        <dc:Bounds x="440" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1yxe02h_di" bpmnElement="Activity_Task_2">
+        <dc:Bounds x="555" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0n1hxyu_di" bpmnElement="Activity_Task_3">
+        <dc:Bounds x="720" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ujtrcd_di" bpmnElement="Gateway_0ujtrcd" isMarkerVisible="true">
+        <dc:Bounds x="885" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10hao0n_di" bpmnElement="Event_11dzvpf">
+        <dc:Bounds x="297" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="281" y="182" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1fx8en3_di" bpmnElement="Event_1jiuypc">
+        <dc:Bounds x="742" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="726" y="182" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_02kkn77_di" bpmnElement="Flow_02kkn77">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="275" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_162bfub_di" bpmnElement="Flow_162bfub">
+        <di:waypoint x="935" y="117" />
+        <di:waypoint x="992" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h27wym_di" bpmnElement="Flow_1h27wym">
+        <di:waypoint x="375" y="117" />
+        <di:waypoint x="440" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18bnztr_di" bpmnElement="Flow_18bnztr">
+        <di:waypoint x="315" y="175" />
+        <di:waypoint x="315" y="210" />
+        <di:waypoint x="465" y="210" />
+        <di:waypoint x="465" y="142" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o9ak3z_di" bpmnElement="Flow_1o9ak3z">
+        <di:waypoint x="490" y="117" />
+        <di:waypoint x="555" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15nnljt_di" bpmnElement="Flow_15nnljt">
+        <di:waypoint x="655" y="117" />
+        <di:waypoint x="720" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0z7b40w_di" bpmnElement="Flow_0z7b40w">
+        <di:waypoint x="820" y="117" />
+        <di:waypoint x="885" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ev99y2_di" bpmnElement="Flow_0ev99y2">
+        <di:waypoint x="760" y="175" />
+        <di:waypoint x="760" y="210" />
+        <di:waypoint x="910" y="210" />
+        <di:waypoint x="910" y="142" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
