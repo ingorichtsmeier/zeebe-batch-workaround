@@ -88,6 +88,28 @@ The important output columns would be:
 - `eventType`
 - `metadata.jobRetries`
 
+### Index `zeebe-record-job`
+
+As an alternative to the data from `operate-event`, these data include the
+`value.errorMessage` field. But the records won't be updated, as the
+`operate-*`. For every change, a new record gets inserted. You will find
+multiple results to a single flow node instance.
+
+KQL-Query-Parameter example:
+`intent :"FAILED" and value.errorMessage : *invalid and value.retries >= 0`
+
+The important output columns would be:
+
+- `intent`
+- `value.bpmnProcessId`
+- `value.processInstanceKey`
+- `value.elementId`
+- `value.elementInstanceKey`
+- `value.errorMessage`
+- `value.retries`
+
+Pick only the latest value for a single flow node instance.
+
 ## Correlate Messages to multiple Process Instances
 
 Use either one or multiple queries from above to identify the process instances.
@@ -134,9 +156,25 @@ Required values to execute process instance modifications:
 - `flowNodeInstanceId` - of the task to terminate
 - `flowNodeId` - of the task to activate
 
-Start a process instance of `ProcessInstanceModificationProcess`. It applies the
-process instance modifications in a multi instance subprocess and catches errors
-if the modification command throws an exception for a single modification.
+### Implement a rest endpoint
+
+To execute multiple process instance modifications in a single operation, you
+can implement a REST endpoint that accepts the data from above and calls the
+`zeebeClient` in a loop:
+
+```
+ModifyProcessInstanceResponse modifyProcessInstanceResponse =
+      zeebeClient.newModifyProcessInstanceCommand(processInstanceKey)
+         .terminateElement(terminatedElementInstanceKey).and()
+         .activateElement(activatedElementId).send().join();
+```
+
+### Start a process instance
+
+As an alternative, start a process instance of
+`ProcessInstanceModificationProcess`. It applies the process instance
+modifications in a multi instance subprocess and catches errors if the
+modification command throws an exception for a single modification.
 
 <img src="doc/process-instance-modification-process.png" alt="ProcessInstanceModificationProcess" width="75%" />
 
